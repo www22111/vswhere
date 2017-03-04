@@ -15,11 +15,13 @@ static wstring ParseArgument(IteratorType& it, const IteratorType& end, const Co
 template <class IteratorType>
 static void ParseArgumentArray(IteratorType& it, const IteratorType& end, const CommandParser::Token& arg, vector<wstring>& arr);
 
+// Should reduce size of string pool and we need the prefix later anyway.
+const wstring CommandArgs::s_ProductPrefix = L"Microsoft.VisualStudio.Product.";
 const vector<wstring> CommandArgs::s_Products
 {
-    L"Microsoft.VisualStudio.Product.Enterprise",
-    L"Microsoft.VisualStudio.Product.Professional",
-    L"Microsoft.VisualStudio.Product.Community",
+    s_ProductPrefix + L"Enterprise",
+    s_ProductPrefix + L"Professional",
+    s_ProductPrefix + L"Community",
 };
 
 const wstring CommandArgs::s_Format = L"text";
@@ -64,6 +66,16 @@ void CommandArgs::Parse(_In_ vector<CommandParser::Token> args)
         else if (ArgumentEquals(arg.Value, L"products"))
         {
             ParseArgumentArray(it, args.end(), arg, m_products);
+
+            // If any products are lacking dots, prepend default prefix as separate entry (in case we ever ship dotless product IDs).
+            for (size_t i = 0, max = m_products.size(); i < max; ++i)
+            {
+                const auto& product = m_products[i];
+                if (wstring::npos == product.find(L'.'))
+                {
+                    m_products.push_back(s_ProductPrefix + product);
+                }
+            }
         }
         else if (ArgumentEquals(arg.Value, L"requires"))
         {

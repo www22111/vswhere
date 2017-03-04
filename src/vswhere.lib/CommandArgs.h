@@ -101,6 +101,7 @@ public:
 
 private:
     static const std::vector<std::wstring> s_Products;
+    static const std::wstring s_ProductPrefix;
     static const std::wstring s_Format;
 
     void Parse(_In_ std::vector<CommandParser::Token> args);

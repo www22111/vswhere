@@ -58,9 +58,11 @@ public:
         args.Parse(L"vswhere.exe -products A B");
 
         auto& products = args.get_Products();
-        Assert::AreEqual<size_t>(2, products.size());
+        Assert::AreEqual<size_t>(4, products.size());
         Assert::IsFalse(find(products.begin(), products.end(), L"A") == products.end());
         Assert::IsFalse(find(products.begin(), products.end(), L"B") == products.end());
+        Assert::IsFalse(find(products.begin(), products.end(), L"Microsoft.VisualStudio.Product.A") == products.end());
+        Assert::IsFalse(find(products.begin(), products.end(), L"Microsoft.VisualStudio.Product.B") == products.end());
     }
 
     TEST_METHOD(Parse_Requires_Empty)
