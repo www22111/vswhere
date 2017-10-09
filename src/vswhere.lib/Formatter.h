@@ -22,11 +22,6 @@ public:
     void Write(_In_ const CommandArgs& args, _In_ Console& console, _In_ ISetupInstance* pInstance);
     void Write(_In_ const CommandArgs& args, _In_ Console& console, _In_ std::vector<ISetupInstancePtr> instances);
 
-    virtual bool ShowLogo() const
-    {
-        return true;
-    }
-
 protected:
     typedef std::function<HRESULT(_In_ ISetupInstance*, _Out_ VARIANT*)> PropertyFunction;
     typedef std::vector<std::pair<std::wstring, PropertyFunction>> PropertyArray;

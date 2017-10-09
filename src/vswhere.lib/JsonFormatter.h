@@ -27,11 +27,6 @@ public:
     {
     }
 
-    bool ShowLogo() const override
-    {
-        return false;
-    }
-
 protected:
     void StartArray(_In_ Console& console) override;
     void StartObject(_In_ Console& console, _In_opt_ const std::wstring& name = empty_wstring) override;

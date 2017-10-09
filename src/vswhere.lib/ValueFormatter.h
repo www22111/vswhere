@@ -24,11 +24,6 @@ public:
     {
     }
 
-    bool ShowLogo() const override
-    {
-        return false;
-    }
-
 protected:
     void WriteProperty(_In_ Console& console, _In_ const std::wstring& name, _In_ const std::wstring& value) override;
 };

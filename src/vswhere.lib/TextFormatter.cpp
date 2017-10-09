@@ -7,6 +7,11 @@
 
 using namespace std;
 
+void TextFormatter::StartDocument(_In_ Console& console)
+{
+    console.WriteLogo();
+}
+
 void TextFormatter::StartArray(_In_ Console& console)
 {
     m_first = true;

@@ -7,6 +7,8 @@
 
 using namespace std;
 
+Module TestConsole::s_module;
+
 void TestConsole::Write(_In_ LPCWSTR wzFormat, va_list args)
 {
     // include space for trailing null character

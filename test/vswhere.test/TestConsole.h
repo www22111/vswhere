@@ -10,7 +10,7 @@ class TestConsole :
 {
 public:
     TestConsole(_In_ const CommandArgs& args) :
-        Console(args)
+        Console(args, s_module)
     {
     }
 
@@ -24,6 +24,11 @@ public:
     {
     }
 
+    bool get_Logo() const noexcept override
+    {
+        return false;
+    }
+
     operator const wchar_t*() const
     {
         return m_output.c_str();
@@ -33,5 +38,6 @@ protected:
     void Write(_In_ LPCWSTR wzFormat, va_list args) override;
 
 private:
+    static Module s_module;
     std::wstring m_output;
 };

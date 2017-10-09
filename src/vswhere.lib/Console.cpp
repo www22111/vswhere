@@ -4,6 +4,7 @@
 // </copyright>
 
 #include "stdafx.h"
+#include "vswhere.lib.Version.h"
 
 using namespace std;
 
@@ -20,6 +21,19 @@ void Console::Initialize() noexcept
 
         ::setlocale(LC_CTYPE, sz);
     }
+}
+
+const wstring Console::get_Version() const noexcept
+{
+    const auto version = m_module.get_FileVersion();
+    const auto nID = version.empty() ? IDS_PROGRAMINFO : IDS_PROGRAMINFOEX;
+
+    return ResourceManager::FormatString(nID, NBGV_INFORMATIONAL_VERSION, version.c_str());
+}
+
+const wstring Console::get_Copyright() const noexcept
+{
+    return ResourceManager::GetString(IDS_COPYRIGHT);
 }
 
 void __cdecl Console::Write(_In_ LPCWSTR wzFormat, ...)
@@ -80,4 +94,14 @@ bool Console::IsConsole(_In_ FILE* f) const noexcept
     }
 
     return true;
+}
+
+void __cdecl Console::WriteLogo()
+{
+    if (get_Logo())
+    {
+        WriteLine(get_Version());
+        WriteLine(get_Copyright());
+        WriteLine();
+    }
 }

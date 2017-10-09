@@ -10,6 +10,12 @@ using namespace std;
 void XmlFormatter::StartDocument(_In_ Console& console)
 {
     console.WriteLine(L"<?xml version=\"1.0\"?>");
+
+    if (console.get_Logo())
+    {
+        console.WriteLine(L"<!-- %ls -->", console.get_Version().c_str());
+        console.WriteLine(L"<!-- %ls -->", console.get_Copyright().c_str());
+    }
 }
 
 void XmlFormatter::StartArray(_In_ Console& console)

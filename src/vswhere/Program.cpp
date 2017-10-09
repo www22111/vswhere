@@ -8,13 +8,12 @@
 using namespace std;
 
 void GetEnumerator(_In_ const CommandArgs& args, _In_ ISetupConfigurationPtr& query, _In_ IEnumSetupInstancesPtr& e);
-void WriteLogo(_In_ const CommandArgs& args, _In_ Console& console, _In_ Module& module);
 
 int wmain(_In_ int argc, _In_ LPCWSTR argv[])
 {
     CommandArgs args;
-    Console console(args);
     Module queryModule;
+    Console console(args, queryModule);
 
     console.Initialize();
     try
@@ -38,7 +37,7 @@ int wmain(_In_ int argc, _In_ LPCWSTR argv[])
         args.Parse(argc, argv);
         if (args.get_Help())
         {
-            WriteLogo(args, console, queryModule);
+            console.WriteLogo();
             args.Usage(console);
 
             return ERROR_SUCCESS;
@@ -63,14 +62,9 @@ int wmain(_In_ int argc, _In_ LPCWSTR argv[])
         InstanceSelector selector(args, helper);
         auto instances = selector.Select(e);
 
-        // Create the formatter and optionally show the logo.
         auto formatter = Formatter::Create(args.get_Format());
-        if (formatter->ShowLogo())
-        {
-            WriteLogo(args, console, queryModule);
-        }
-
         formatter->Write(args, console, instances);
+
         return ERROR_SUCCESS;
     }
     catch (const system_error& ex)
@@ -78,7 +72,7 @@ int wmain(_In_ int argc, _In_ LPCWSTR argv[])
         const auto code = ex.code().value();
         if (ERROR_INVALID_PARAMETER == code)
         {
-            WriteLogo(args, console, queryModule);
+            console.WriteLogo();
         }
 
         console.Write(L"%ls 0x%x: ", ResourceManager::GetString(IDS_ERROR).c_str(), code);
@@ -137,18 +131,5 @@ void GetEnumerator(_In_ const CommandArgs& args, _In_ ISetupConfigurationPtr& qu
         {
             throw win32_error(hr);
         }
-    }
-}
-
-void WriteLogo(_In_ const CommandArgs& args, _In_ Console& console, _In_ Module& module)
-{
-    if (args.get_Logo())
-    {
-        const auto version = module.get_FileVersion();
-        const auto nID = version.empty() ? IDS_PROGRAMINFO : IDS_PROGRAMINFOEX;
-
-        console.WriteLine(ResourceManager::FormatString(nID, NBGV_INFORMATIONAL_VERSION, version.c_str()));
-        console.WriteLine(ResourceManager::GetString(IDS_COPYRIGHT));
-        console.WriteLine();
     }
 }

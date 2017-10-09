@@ -26,11 +26,6 @@ public:
     {
     }
 
-    bool ShowLogo() const override
-    {
-        return false;
-    }
-
 protected:
     void StartDocument(_In_ Console& console) override;
     void StartArray(_In_ Console& console) override;
