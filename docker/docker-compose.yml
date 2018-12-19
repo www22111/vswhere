@@ -4,6 +4,7 @@
 version: "2.1"
 services:
   test:
+    image: microsoft/vssetup:test
     build: .
     volumes:
       - ../bin/${CONFIGURATION:-Debug}:C:/bin:ro
