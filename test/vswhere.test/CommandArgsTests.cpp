@@ -23,7 +23,7 @@ public:
         Assert::IsFalse(args.get_Legacy());
         Assert::IsFalse(args.get_Prerelease());
         Assert::AreEqual(L"text", args.get_Format().c_str());
-        Assert::AreEqual<size_t>(0, args.get_Property().length());
+        Assert::AreEqual<size_t>(0, args.get_Properties().get_Length());
         Assert::IsFalse(args.get_Help());
         Assert::IsFalse(args.get_UTF8());
         Assert::IsTrue(args.get_Logo());
@@ -216,22 +216,22 @@ public:
     TEST_METHOD(Parse_Property)
     {
         CommandArgs args;
-        Assert::AreEqual<size_t>(0, args.get_Property().length());
+        Assert::AreEqual<size_t>(0, args.get_Properties().get_Length());
         Assert::AreEqual(L"text", args.get_Format().c_str());
 
         args.Parse(L"vswhere.exe -property test");
-        Assert::AreEqual(L"test", args.get_Property().c_str());
+        Assert::AreEqual(L"test", static_cast<wstring>(args.get_Properties()).c_str());
         Assert::AreEqual(L"value", args.get_Format().c_str());
     }
 
     TEST_METHOD(Parse_Property_Explicit_Format)
     {
         CommandArgs args;
-        Assert::AreEqual<size_t>(0, args.get_Property().length());
+        Assert::AreEqual<size_t>(0, args.get_Properties().get_Length());
         Assert::AreEqual(L"text", args.get_Format().c_str());
 
         args.Parse(L"vswhere.exe -property test -format text");
-        Assert::AreEqual(L"test", args.get_Property().c_str());
+        Assert::AreEqual(L"test", static_cast<wstring>(args.get_Properties()).c_str());
         Assert::AreEqual(L"text", args.get_Format().c_str());
     }
 

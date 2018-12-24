@@ -148,7 +148,7 @@ void Formatter::WriteInternal(_In_ const CommandArgs& args, _In_ Console& consol
 
     StartObject(console);
 
-    wstring specified = args.get_Property();
+    const wstring& specified = args.get_Properties();
     variant_t vtValue;
     bool found = false;
 
@@ -280,7 +280,7 @@ bool Formatter::WriteProperties(_In_ const CommandArgs& args, _In_ Console& cons
     }
 
     // Trim optional nested object name from specified property if matching current scope.
-    wstring specified = args.get_Property();
+    wstring specified = args.get_Properties();
     if (prefix.size() > 0)
     {
         auto pos = specified.find_first_of(s_delims);

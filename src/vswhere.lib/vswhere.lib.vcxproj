@@ -111,6 +111,7 @@
     <ClInclude Include="LegacyInstance.h" />
     <ClInclude Include="LegacyProvider.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="PropertySelector.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SafeArray.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="LegacyInstance.cpp" />
     <ClCompile Include="LegacyProvider.cpp" />
     <ClCompile Include="Module.cpp" />
+    <ClCompile Include="PropertySelector.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

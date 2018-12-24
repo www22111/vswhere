@@ -106,7 +106,7 @@ void CommandArgs::Parse(_In_ vector<CommandParser::Token> args)
         }
         else if (ArgumentEquals(arg.Value, L"property"))
         {
-            m_property = ParseArgument(it, args.end(), arg);
+            ParseArgumentArray(it, args.end(), arg, m_properties.m_properties);
         }
         else if (ArgumentEquals(arg.Value, L"nologo"))
         {
@@ -146,7 +146,7 @@ void CommandArgs::Parse(_In_ vector<CommandParser::Token> args)
         }
     }
 
-    if (!m_property.empty() && m_format.empty())
+    if (!m_properties.IsEmpty() && m_format.empty())
     {
         m_format = L"value";
     }

@@ -33,7 +33,7 @@ public:
         m_legacy(obj.m_legacy),
         m_prerelease(obj.m_prerelease),
         m_format(obj.m_format),
-        m_property(obj.m_property),
+        m_properties(obj.m_properties),
         m_nologo(obj.m_nologo),
         m_utf8(obj.m_utf8),
         m_help(obj.m_help)
@@ -100,9 +100,9 @@ public:
         return m_format;
     }
 
-    const std::wstring& get_Property() const noexcept
+    const PropertySelector& get_Properties() const noexcept
     {
-        return m_property;
+        return m_properties;
     }
 
     const bool get_Logo() const noexcept
@@ -142,7 +142,7 @@ private:
     bool m_legacy;
     bool m_prerelease;
     std::wstring m_format;
-    std::wstring m_property;
+    PropertySelector m_properties;
     bool m_nologo;
     bool m_utf8;
     bool m_help;

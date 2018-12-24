@@ -54,6 +54,7 @@ _COM_SMARTPTR_TYPEDEF(ISetupInstanceCatalog, __uuidof(ISetupInstanceCatalog));
 #include "Exceptions.h"
 #include "CoInitializer.h"
 #include "CommandParser.h"
+#include "PropertySelector.h"
 #include "CommandArgs.h"
 #include "Console.h"
 #include "Formatter.h"
