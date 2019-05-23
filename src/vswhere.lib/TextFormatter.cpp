@@ -5,6 +5,11 @@
 
 #include "stdafx.h"
 
+#define ESC L"\x1b"
+#define COLOR_STRING ESC L"[38;2;206;145;120m"
+#define COLOR_PROPERTY ESC L"[38;2;156;220;254m"
+#define COLOR_RESET ESC L"[0m"
+
 using namespace std;
 
 void TextFormatter::StartArray(_In_ Console& console, _In_opt_ const std::wstring& name)
@@ -43,7 +48,14 @@ void TextFormatter::WriteProperty(_In_ Console& console, _In_ const std::wstring
         prefix = m_scopes.top();
     }
 
-    console.WriteLine(L"%ls%ls: %ls", prefix.c_str(), name.c_str(), value.c_str());
+    if (console.IsVT100())
+    {
+        console.WriteLine(COLOR_PROPERTY L"%ls%ls" COLOR_RESET L": %ls", prefix.c_str(), name.c_str(), value.c_str());
+    }
+    else
+    {
+        console.WriteLine(L"%ls%ls: %ls", prefix.c_str(), name.c_str(), value.c_str());
+    }
 }
 
 void TextFormatter::EndObject(_In_ Console& console)

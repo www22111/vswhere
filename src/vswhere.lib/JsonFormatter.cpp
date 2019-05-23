@@ -5,6 +5,13 @@
 
 #include "stdafx.h"
 
+#define ESC L"\x1b"
+#define COLOR_BOOL ESC L"[38;2;86;156;214m"
+#define COLOR_NUMBER ESC L"[38;2;181;206;168m"
+#define COLOR_STRING ESC L"[38;2;206;145;120m"
+#define COLOR_PROPERTY ESC L"[38;2;156;220;254m"
+#define COLOR_RESET ESC L"[0m"
+
 using namespace std;
 
 wstring JsonFormatter::Escape(_In_ const wstring& value)
@@ -41,19 +48,51 @@ void JsonFormatter::WriteProperty(_In_ Console& console, _In_ const wstring& nam
     StartProperty(console, name);
 
     auto escaped = Escape(value);
-    console.Write(L"\"%ls\"",escaped.c_str());
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_STRING);
+    }
+
+    console.Write(L"\"%ls\"", escaped.c_str());
+
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_RESET);
+    }
 }
 
 void JsonFormatter::WriteProperty(_In_ Console& console, _In_ const wstring& name, _In_ bool value)
 {
     StartProperty(console, name);
+
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_BOOL);
+    }
+
     console.Write(value ? L"true" : L"false");
+
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_RESET);
+    }
 }
 
 void JsonFormatter::WriteProperty(_In_ Console& console, _In_ const wstring& name, _In_ long long value)
 {
     StartProperty(console, name);
+
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_NUMBER);
+    }
+
     console.Write(L"%I64d", value);
+
+    if (console.IsVT100())
+    {
+        console.Write(COLOR_RESET);
+    }
 }
 
 void JsonFormatter::EndObject(_In_ Console& console)
@@ -118,7 +157,14 @@ void JsonFormatter::StartProperty(_In_ Console& console, _In_ const std::wstring
     console.Write(L"\n%ls", m_padding.c_str());
     if (m_scopes.top().IsObject())
     {
-        console.Write(L"\"%ls\": ", name.c_str());
+        if (console.IsVT100())
+        {
+            console.Write(COLOR_PROPERTY L"\"%ls\"" COLOR_RESET L": ", name.c_str());
+        }
+        else
+        {
+            console.Write(L"\"%ls\": ", name.c_str());
+        }
     }
 }
 

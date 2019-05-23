@@ -5,6 +5,10 @@
 
 #include "stdafx.h"
 
+#define ESC L"\x1b"
+#define COLOR_PROPERTY ESC L"[38;2;156;220;254m"
+#define COLOR_RESET ESC L"[0m"
+
 using namespace std;
 
 void JsonScope::StartScope(_In_ Console& console)
@@ -34,6 +38,10 @@ void JsonScope::WriteStartImpl(_In_ Console& console)
     if (m_type == Type::array || Name().empty())
     {
         console.Write(L"%ls%lc", Padding().c_str(), StartChar());
+    }
+    else if (console.IsVT100())
+    {
+        console.Write(L"%ls" COLOR_PROPERTY L"\"%ls\"" COLOR_RESET L": %lc", Padding().c_str(), Name().c_str(), StartChar());
     }
     else
     {

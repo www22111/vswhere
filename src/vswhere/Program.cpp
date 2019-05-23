@@ -5,6 +5,10 @@
 
 #include "stdafx.h"
 
+#define ESC L"\x1b"
+#define COLOR_HEADER ESC L"[38;2;128;128;128m"
+#define COLOR_RESET ESC L"[0m"
+
 using namespace std;
 
 void GetEnumerator(_In_ const CommandArgs& args, _In_ ISetupConfigurationPtr& query, _In_ IEnumSetupInstancesPtr& e);
@@ -153,8 +157,19 @@ void WriteLogo(_In_ const CommandArgs& args, _In_ Console& console, _In_ Module&
         const auto version = module.get_FileVersion();
         const auto nID = version.empty() ? IDS_PROGRAMINFO : IDS_PROGRAMINFOEX;
 
+        if (console.IsVT100())
+        {
+            console.Write(COLOR_HEADER);
+        }
+
         console.WriteLine(ResourceManager::FormatString(nID, NBGV_INFORMATIONAL_VERSION, version.c_str()));
         console.WriteLine(ResourceManager::GetString(IDS_COPYRIGHT));
+
+        if (console.IsVT100())
+        {
+            console.Write(COLOR_RESET);
+        }
+
         console.WriteLine();
     }
 }

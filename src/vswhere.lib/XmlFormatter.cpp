@@ -5,11 +5,24 @@
 
 #include "stdafx.h"
 
+#define ESC L"\x1b"
+#define COLOR_ATTRIBUTE ESC L"[38;2;156;220;254m"
+#define COLOR_BRACKET ESC L"[38;2;128;128;128m"
+#define COLOR_ELEMENT ESC L"[38;2;86;156;214m"
+#define COLOR_VALUE ESC L"[38;2;206;145;120m"
+#define COLOR_RESET ESC L"[0m"
+
 using namespace std;
 
 void XmlFormatter::StartDocument(_In_ Console& console)
 {
-    console.WriteLine(L"<?xml version=\"1.0\"?>");
+    const auto ATTRIBUTE = console.IsVT100() ? COLOR_ATTRIBUTE : L"";
+    const auto BRACKET = console.IsVT100() ? COLOR_BRACKET : L"";
+    const auto ELEMENT = console.IsVT100() ? COLOR_ELEMENT : L"";
+    const auto VALUE = console.IsVT100() ? COLOR_VALUE : L"";
+    const auto RESET = console.IsVT100() ? COLOR_RESET : L"";
+
+    console.WriteLine(L"%1$ls<?%2$lsxml%3$ls %4$lsversion%3$ls=%5$ls\"1.0\"%1$ls?>%3$ls", BRACKET, ELEMENT, RESET, ATTRIBUTE, VALUE);
 }
 
 void XmlFormatter::StartArray(_In_ Console& console, _In_opt_ const wstring& name)
@@ -24,8 +37,13 @@ void XmlFormatter::StartObject(_In_ Console& console, _In_opt_ const wstring& na
 
 void XmlFormatter::WriteProperty(_In_ Console& console, _In_ const wstring& name, _In_ const wstring& value)
 {
+    const auto BRACKET = console.IsVT100() ? COLOR_BRACKET : L"";
+    const auto ELEMENT = console.IsVT100() ? COLOR_ELEMENT : L"";
+    const auto RESET = console.IsVT100() ? COLOR_RESET : L"";
+
     m_scopes.top().WriteStart(console);
-    console.WriteLine(L"%1$ls<%2$ls>%3$ls</%2$ls>", m_padding.c_str(), name.c_str(), value.c_str());
+
+    console.WriteLine(L"%1$ls%4$ls<%5$ls%2$ls%4$ls>%6$ls%3$ls%4$ls</%5$ls%2$ls%4$ls>%6$ls", m_padding.c_str(), name.c_str(), value.c_str(), BRACKET, ELEMENT, RESET);
 }
 
 void XmlFormatter::EndObject(_In_ Console& console)

@@ -11,12 +11,28 @@ void Console::Initialize() noexcept
 {
     if (!m_fInitialized)
     {
+        // Try to enable VT sequences if writing to a console.
+        HANDLE hStdOut = INVALID_HANDLE_VALUE;
+        if (IsConsole(stdout, &hStdOut))
+        {
+            DWORD dwMode = 0;
+            if (::GetConsoleMode(hStdOut, &dwMode))
+            {
+                dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+                if (::SetConsoleMode(hStdOut, dwMode))
+                {
+                    m_fvt100 = true;
+                }
+            }
+        }
+
         if (m_args.get_UTF8())
         {
             ::_setmode(_fileno(stdout), _O_U8TEXT);
         }
-        else if (IsConsole(stdout))
+        else if (INVALID_HANDLE_VALUE != hStdOut)
         {
+            // Write Unicode to the console.
             ::_setmode(_fileno(stdout), _O_WTEXT);
         }
         else
@@ -29,6 +45,12 @@ void Console::Initialize() noexcept
 
         m_fInitialized = true;
     }
+}
+
+bool Console::IsVT100() noexcept
+{
+    Initialize();
+    return m_fvt100;
 }
 
 void __cdecl Console::Write(_In_ LPCWSTR wzFormat, ...)
@@ -71,8 +93,10 @@ void Console::Write(_In_ LPCWSTR wzFormat, va_list args)
     ::_vwprintf_p(wzFormat, args);
 }
 
-bool Console::IsConsole(_In_ FILE* f) const noexcept
+bool Console::IsConsole(_In_ FILE* f, _Outptr_ HANDLE* hStdOut) const noexcept
 {
+    *hStdOut = INVALID_HANDLE_VALUE;
+
     auto fno = ::_fileno(f);
     auto hFile = (HANDLE)::_get_osfhandle(fno);
     auto dwType = ::GetFileType(hFile);
@@ -90,5 +114,6 @@ bool Console::IsConsole(_In_ FILE* f) const noexcept
         return false;
     }
 
+    *hStdOut = hFile;
     return true;
 }
